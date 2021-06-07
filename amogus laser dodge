@@ -1,0 +1,205 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
+
+namespace Game2
+{
+	
+	public class Game1 : Game
+	{
+		GraphicsDeviceManager graphics;
+		SpriteBatch spriteBatch;
+		Texture2D amogus;
+		Vector2 pos = new Vector2(10, 240); //vektor för amogus
+		Texture2D lsar;
+		Vector2 pos2 = new Vector2(10, 0); //vektor för laser
+		Texture2D coin;
+		Vector2 pos3 = new Vector2(20, 0); //vektor för coin
+		Texture2D diva;
+		Vector2 pos4 = new Vector2(20, 0); //vektor för coin
+		Rectangle lsar2 = new Rectangle(100, -200, 150, 200);
+		Rectangle amogus2 = new Rectangle(100, 800, 300, 200); //Bildar en hitbox rektangel för amogus
+		Rectangle coin2 = new Rectangle(50, 400, 150, 100); //Bildar en hitbox rektangel för coin
+		private Rectangle diva2 = new Rectangle(-50, -800, 200, 300); //Bildar en hitbox rektangel för coin
+
+		int speed = 7; //Farten för laser stråle
+		int divaspeed = 4;
+		SpriteFont ScoreFont;
+		SpriteFont LevelFont;
+		int score = 0; //Score poäng
+		int level = 1; //Score poäng
+		int pose = 0;
+		
+
+
+		//KOmentar
+		public Game1()
+		{
+			graphics = new GraphicsDeviceManager(this);
+			graphics.PreferredBackBufferWidth = 2000;  //Storlek för skärmen, bredd
+			graphics.PreferredBackBufferHeight = 1200;  //Storlek för skärmen, höjd
+			graphics.ApplyChanges();
+			Content.RootDirectory = "Content";
+
+
+		}
+
+		
+		protected override void Initialize()
+		{
+
+			base.Initialize();
+		}
+
+	
+		protected override void LoadContent()
+		{
+			
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			amogus = Content.Load<Texture2D>("amogus");
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			lsar = Content.Load<Texture2D>("lsar");
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			coin = Content.Load<Texture2D>("coin");
+			ScoreFont = Content.Load<SpriteFont>("Score");
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			diva = Content.Load<Texture2D>("diva");
+			LevelFont = Content.Load<SpriteFont>("Level");
+			
+
+		}
+
+		
+		protected override void UnloadContent()
+		{
+			
+		}
+
+		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+		protected override void Update(GameTime gameTime)
+		{
+			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+				Exit();  //om man trycker exit ska man gå ut ur spelet
+			{
+				KeyboardState kstate = Keyboard.GetState();
+				if (kstate.IsKeyDown(Keys.Right))
+					amogus2.X++;
+				if (kstate.IsKeyDown(Keys.Left))
+					amogus2.X--;
+				if (kstate.IsKeyDown(Keys.Down))
+					amogus2.Y++;
+				if (kstate.IsKeyDown(Keys.Up))
+					amogus2.Y--;
+				if (kstate.IsKeyDown(Keys.Right))
+					amogus2.X += 10;
+				if (kstate.IsKeyDown(Keys.Left))
+					amogus2.X -= 10;
+				if (kstate.IsKeyDown(Keys.Down))
+					amogus2.Y += 10;
+				if (kstate.IsKeyDown(Keys.Up))
+					amogus2.Y -= 10;
+				base.Update(gameTime);
+				if (diva2.Y < 0 || diva2.Y > Window.ClientBounds.Height - diva2.Height)
+					speed *= -1;
+				if (diva2.X < 0 || diva2.X > Window.ClientBounds.Height - diva2.Height)
+					speed *= -1;
+
+
+
+
+
+				if (true)
+				{
+					lsar2.Y += speed;
+				}
+
+
+				
+
+				if (lsar2.Intersects(amogus2))
+				{
+					Exit();
+				} //Om laser når amogus gå ut ur spelet
+
+				if (score < 10)
+				{
+					if (lsar2.Y > 1280)
+					{
+						System.Random r = new Random();
+						lsar2.X = r.Next(0, 2000); //i intervallet kan laser teleportera
+						lsar2.Y = 0;
+						lsar2.Y = speed++;
+					}
+				}
+				if (amogus2.Intersects(coin2))
+				{
+					System.Random r = new Random();
+					coin2.X = r.Next(0, 2000); //i intervallet kan coin teleportera
+					coin2.Y = r.Next(0, 1080); //i intervallet kan coin teleportera
+					score++;
+					if (score % 10 == 0)
+					{
+						level++;
+					}
+
+				}
+				if (score == 11)
+				{
+					diva2.Y += speed;
+					diva2.X += speed;
+				}
+
+				if (score > 10)
+				{
+					if (pose == 0)
+					{
+						System.Random r = new Random();
+						diva2.X = r.Next(0, 2000); //i intervallet kan divan teleportera
+						diva2.Y = r.Next(0, 1040);
+						pose = 1;
+						{
+							
+						}
+						
+						if (lsar2.Y > 1280)
+						{
+							System.Random s = new Random();
+							lsar2.X = s.Next(-200, -200); //i intervallet kan laser teleportera
+							lsar2.Y = 0;
+
+						}
+
+					}
+
+
+
+
+
+
+					base.Update(gameTime);
+				}
+			}
+		}
+
+		
+		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+		protected override void Draw(GameTime gameTime)
+		{
+			GraphicsDevice.Clear(Color.CornflowerBlue);
+
+			// TODO: Add your drawing code here.
+			spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null,
+			Matrix.CreateScale(0.9f)); //storlek för figur
+			spriteBatch.Draw(amogus, amogus2, Color.White); //läs ut och ge färg för figur
+			spriteBatch.Draw(diva, diva2, Color.White); //läs ut och ge färg för figur
+			spriteBatch.Draw(lsar, lsar2, Color.White); //läs ut och ge färg för figur			
+			spriteBatch.Draw(coin, coin2, Color.Yellow); //läs ut och ge färg för figur
+			spriteBatch.DrawString(ScoreFont, "Score: " + score, new Vector2(950, 100), Color.Black); //Karaktär för spritefont 
+			spriteBatch.DrawString(LevelFont, "Level " + level, new Vector2(950, 200), Color.Black); //Karaktär för spritefont 
+			spriteBatch.End();
+			base.Draw(gameTime);
+		}
+	}
+}
+
