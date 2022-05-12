@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace Game2
+namespace kys
 {
 	
 	public class Game1 : Game
@@ -12,6 +12,11 @@ namespace Game2
 
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
+
+        Sprite laser;
+        Sprite among;
+
+        Sprite tok;
 		Texture2D amogus;
 		Vector2 pos = new Vector2(10, 240); //vektor för amogus
 		Texture2D lsar;
@@ -62,19 +67,17 @@ namespace Game2
 	
 		protected override void LoadContent()
 		{
-			
-			spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 			amogus = Content.Load<Texture2D>("amogus");
-			spriteBatch = new SpriteBatch(GraphicsDevice);
 			lsar = Content.Load<Texture2D>("lsar");
-			spriteBatch = new SpriteBatch(GraphicsDevice);
 			coin = Content.Load<Texture2D>("coin");
 			ScoreFont = Content.Load<SpriteFont>("Score");
-			spriteBatch = new SpriteBatch(GraphicsDevice);
 			diva = Content.Load<Texture2D>("diva");
 			LevelFont = Content.Load<SpriteFont>("Level");
 			
-
+            laser = new Sprite(lsar, pos2, lsar2);
+            among = new Sprite(amogus, pos, amogus2);
+            tok = new Sprite(coin, pos3, coin2);
 		}
 
 		
@@ -244,6 +247,11 @@ namespace Game2
 			// TODO: Add your drawing code here.
 			spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null,
 			Matrix.CreateScale(0.9f)); //storlek för figur
+            laser.Draw(spriteBatch);
+            among.Draw(spriteBatch);
+            laser.Draw(spriteBatch);
+            laser.Draw(spriteBatch);
+            laser.Draw(spriteBatch);
 			spriteBatch.Draw(amogus, amogus2, Color.White); //läs ut och ge färg för figur
 			spriteBatch.Draw(diva, diva2, Color.White); //läs ut och ge färg för figur
 			spriteBatch.Draw(lsar, lsar2, Color.White); //läs ut och ge färg för figur			
