@@ -6,17 +6,21 @@ using System;
 namespace kys
 {
 	
-	public class Game1 : Game
+	public class Game2 : Game
 	{
 		
 
-		GraphicsDeviceManager graphics;
-		SpriteBatch spriteBatch;
+		GraphicsDeviceManager graphics; 
+		SpriteBatch spriteBatch; 
 
-        Sprite laser;
-        Sprite among;
+        Sprite laser;  
+        Sprite among; 
 
         Sprite tok;
+
+		Sprite div;
+
+
 		Texture2D amogus;
 		Vector2 pos = new Vector2(10, 240); //vektor för amogus
 		Texture2D lsar;
@@ -25,7 +29,7 @@ namespace kys
 		Vector2 pos3 = new Vector2(20, 0); //vektor för coin
 		Texture2D diva;
 		Vector2 pos4 = new Vector2(20, 0); //vektor för diva
-		Vector2 dspeed = new Vector2(7, 7); //speed vektor för diva
+		Vector2 dspeed = new Vector2(7, 7); //speed vektor för diva 
 
 		
 
@@ -33,7 +37,7 @@ namespace kys
 		Rectangle lsar2 = new Rectangle(100, -200, 150, 200);
 		Rectangle amogus2 = new Rectangle(100, 800, 300, 200); //Bildar en hitbox rektangel för amogus
 		Rectangle coin2 = new Rectangle(50, 400, 150, 100); //Bildar en hitbox rektangel för coin
-		private Rectangle diva2 = new Rectangle(-50, -800, 200, 300); //Bildar en hitbox rektangel för coin
+		private Rectangle diva2 = new Rectangle(-50, -800, 200, 300); //Bildar en hitbox rektangel för divan
 
 		int speed = 7; //Farten för laser stråle
 		SpriteFont ScoreFont;
@@ -46,7 +50,7 @@ namespace kys
 
 
 		//KOmentar
-		public Game1()
+		public Game2()
 		{
 			graphics = new GraphicsDeviceManager(this);
 			graphics.PreferredBackBufferWidth = 2000;  //Storlek för skärmen, bredd
@@ -68,7 +72,7 @@ namespace kys
 		protected override void LoadContent()
 		{
             spriteBatch = new SpriteBatch(GraphicsDevice);
-			amogus = Content.Load<Texture2D>("amogus");
+			amogus = Content.Load<Texture2D>("amogus");   
 			lsar = Content.Load<Texture2D>("lsar");
 			coin = Content.Load<Texture2D>("coin");
 			ScoreFont = Content.Load<SpriteFont>("Score");
@@ -76,8 +80,9 @@ namespace kys
 			LevelFont = Content.Load<SpriteFont>("Level");
 			
             laser = new Sprite(lsar, pos2, lsar2);
-            among = new Sprite(amogus, pos, amogus2);
+            among = new Sprite(amogus, pos, amogus2); 
             tok = new Sprite(coin, pos3, coin2);
+			div = new Sprite(diva, dspeed, diva2);
 		}
 
 		
@@ -132,9 +137,9 @@ namespace kys
 					pos4.Y = -pos4.Y; //vektorn omvänd
 				}
 
-				if (diva2.Intersects(amogus2))
+				if (diva2.Intersects(amogus2) || lsar2.Intersects(amogus2)) 
 				{
-					Exit(); //om divan rör amogus ska spelet slutas
+					Exit(); //om divan eller laser rör amogus ska spelet slutas
 				}
 
 					if (true)
@@ -158,10 +163,6 @@ namespace kys
 					diva2.Location += dspeed.ToPoint();
 				}
 
-				if (lsar2.Intersects(amogus2)) //om fienden laser rör amogus avslutas
-				{
-					Exit();
-				} //Om laser når amogus gå ut ur spelet
 
 				if (score < 10) 
 				{
@@ -200,7 +201,7 @@ namespace kys
 						}
 						else
 						{
-							dspeed.Y += speedup;
+							dspeed.Y += speedup; 
 						}
 
 					}
@@ -214,12 +215,12 @@ namespace kys
 						System.Random r = new Random();
 						diva2.X = r.Next(0, 2000); //i intervallet kan divan teleportera
 						diva2.Y = r.Next(0, 1040);
-						pose = 1;
+						pose = 1; 
 						{
 							
 						}
 						
-						if (lsar2.Y > 1280) // då ska också lasern placeras utanför skärmen temporärt
+						if (lsar2.Y > 1280) // då ska också lasern placeras utanför skärmen temporärt 
 						{
 							System.Random s = new Random();
 							lsar2.X = s.Next(-200, -200); //i intervallet kan laser teleportera
@@ -249,9 +250,8 @@ namespace kys
 			Matrix.CreateScale(0.9f)); //storlek för figur
             laser.Draw(spriteBatch);
             among.Draw(spriteBatch);
-            laser.Draw(spriteBatch);
-            laser.Draw(spriteBatch);
-            laser.Draw(spriteBatch);
+            tok.Draw(spriteBatch);
+            div.Draw(spriteBatch);          
 			spriteBatch.Draw(amogus, amogus2, Color.White); //läs ut och ge färg för figur
 			spriteBatch.Draw(diva, diva2, Color.White); //läs ut och ge färg för figur
 			spriteBatch.Draw(lsar, lsar2, Color.White); //läs ut och ge färg för figur			
